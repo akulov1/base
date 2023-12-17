@@ -20,7 +20,7 @@ function submitForm() {
     };
 
     // Отправляем данные на Formcarry
-    fetch('http://formcarry.com/s/EHtMLew1to', {
+    fetch('https://formcarry.com/s/EHtMLew1to', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
