@@ -1,44 +1,41 @@
 function submitForm() {
-    var email = document.getElementById("exampleFormControlInput1").value;
-    var textarea = document.getElementById("exampleFormControlTextarea1").value;
-    var select = document.getElementById("exampleFormControlSelect1").value;
-    var checkbox = document.getElementById("exampleCheck1").checked;
+    // Получаем значения полей
+    var email = document.getElementById('exampleFormControlInput1').value;
+    var name = document.getElementById('exampleFormControlTextarea1').value;
+    var notification = document.getElementById('exampleFormControlSelect1').value;
+    var isChecked = document.getElementById('exampleCheck1').checked;
 
-    // Prepare data to send
+    // Проверяем, что обязательные поля заполнены
+    if (!email || !name) {
+        alert('Пожалуйста, заполните обязательные поля (почта и имя).');
+        return;
+    }
+
+    // Создаем объект с данными формы
     var formData = {
         email: email,
-        textarea: textarea,
-        select: select,
-        checkbox: checkbox
+        name: name,
+        notification: notification,
+        isChecked: isChecked
     };
 
-    // Use History API to update URL
-    var stateObj = { formData: formData };
-    history.pushState(stateObj, "", "/submitted");
-
-    // Send data to FormCarry (Note: Update the URL and API endpoint accordingly)
+    // Отправляем данные на Formcarry
     fetch('https://formcarry.com/s/EHtMLew1to', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
     })
-        .then(response => response.json())
-        .then(data => console.log('Success:', data))
-        .catch((error) => {
-            console.error('Error:', error);
+        .then(response => {
+            if (response.ok) {
+                alert('Форма успешно отправлена!');
+            } else {
+                alert('Ошибка при отправке формы. Пожалуйста, попробуйте еще раз.');
+            }
+        })
+        .catch(error => {
+            alert('Произошла ошибка: ' + error.message);
         });
 }
-
-// Listen for changes in the History API
-window.onpopstate = function (event) {
-    if (event.state && event.state.formData) {
-        // Populate form with data from the URL
-        var formData = event.state.formData;
-        document.getElementById("exampleFormControlInput1").value = formData.email;
-        document.getElementById("exampleFormControlTextarea1").value = formData.textarea;
-        document.getElementById("exampleFormControlSelect1").value = formData.select;
-        document.getElementById("exampleCheck1").checked = formData.checkbox;
-    }
-};
